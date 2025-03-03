@@ -9,12 +9,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document (collection = "Cart")
-public class Cart {
+@Document (collection = "Carts")
+public class Carts {
     @Id
     private String id;
     @DBRef
-    private User userID;
+    private Users userID;
     private List<Items> cartItems;
 
     @CreatedDate
@@ -22,7 +22,7 @@ public class Cart {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    public Cart(String id, User userID, List<Items> cartItems, LocalDateTime createAt, LocalDateTime updateAt) {
+    public Carts(String id, Users userID, List<Items> cartItems, LocalDateTime createAt, LocalDateTime updateAt) {
         this.id = id;
         this.userID = userID;
         this.cartItems = cartItems;
@@ -38,11 +38,11 @@ public class Cart {
         this.id = id;
     }
 
-    public User getUserID() {
+    public Users getUserID() {
         return userID;
     }
 
-    public void setUserID(User userID) {
+    public void setUserID(Users userID) {
         this.userID = userID;
     }
 

@@ -12,7 +12,7 @@ public class Payments {
     private String id;
 
     @DBRef
-    private User userID;
+    private Users userID;
 
     @DBRef
     private Oders orderID;
@@ -32,11 +32,11 @@ public class Payments {
         this.id = id;
     }
 
-    public User getUserID() {
+    public Users getUserID() {
         return userID;
     }
 
-    public void setUserID(User userID) {
+    public void setUserID(Users userID) {
         this.userID = userID;
     }
 

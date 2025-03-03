@@ -8,8 +8,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Product")
-public class Product {
+@Document(collection = "Products")
+public class Products {
     @Id
     private String id;
 
@@ -32,9 +32,9 @@ public class Product {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    public Product() {}
+    public Products() {}
 
-    public Product(String id, String productName, Double price, String[] colors, String[] sizes, int stock, String desc,
+    public Products(String id, String productName, Double price, String[] colors, String[] sizes, int stock, String desc,
             Image productImage, Categrories categroryID) {
         this.id = id;
         this.productName = productName;

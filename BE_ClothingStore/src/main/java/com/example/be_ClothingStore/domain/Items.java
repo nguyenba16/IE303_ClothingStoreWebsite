@@ -4,22 +4,22 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public class Items {
     @DBRef
-    private Product productID;
+    private Products productID;
     private int quantity;
     private String size;
     private String color;
     
-    public Product getProductID() {
+    public Products getProductID() {
         return productID;
     }
     
-    public Items(Product productID, int quantity, String size) {
+    public Items(Products productID, int quantity, String size) {
         this.productID = productID;
         this.quantity = quantity;
         this.size = size;
     }
 
-    public void setProductID(Product productID) {
+    public void setProductID(Products productID) {
         this.productID = productID;
     }
     public int getQuantity() {

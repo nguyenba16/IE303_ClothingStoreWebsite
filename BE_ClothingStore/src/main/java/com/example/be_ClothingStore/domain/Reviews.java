@@ -13,17 +13,17 @@ public class Reviews {
     private String id;
 
     @DBRef
-    private User userID;
+    private Users userID;
 
     @DBRef
-    private Product productID;
+    private Products productID;
 
     private String comment;
     private float rating;
     @CreatedDate
     private LocalDateTime createAt;
 
-    public Reviews(String id, User userID, Product productID, String comment, float rating, LocalDateTime createAt) {
+    public Reviews(String id, Users userID, Products productID, String comment, float rating, LocalDateTime createAt) {
         this.id = id;
         this.userID = userID;
         this.productID = productID;
@@ -37,16 +37,16 @@ public class Reviews {
     public void setId(String id) {
         this.id = id;
     }
-    public User getUserID() {
+    public Users getUserID() {
         return userID;
     }
-    public void setUserID(User userID) {
+    public void setUserID(Users userID) {
         this.userID = userID;
     }
-    public Product getProductID() {
+    public Products getProductID() {
         return productID;
     }
-    public void setProductID(Product productID) {
+    public void setProductID(Products productID) {
         this.productID = productID;
     }
     public String getComment() {

@@ -5,8 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "User")
-public class User {
+@Document(collection = "Users")
+public class Users {
     @Id 
     private String id;
     private String name;
@@ -22,7 +22,7 @@ public class User {
     private LocalDateTime createAt;
     @LastModifiedDate
     private LocalDateTime updateAt;
-    public User (){}
+    public Users (){}
     public String getId() {
         return id;
     }

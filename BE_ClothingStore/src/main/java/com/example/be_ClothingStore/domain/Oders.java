@@ -14,7 +14,7 @@ public class Oders {
     @Id
     private String id;
     @DBRef
-    private User userID;
+    private Users userID;
 
     @DBRef
     private Payments paymentID;
@@ -37,11 +37,11 @@ public class Oders {
         this.id = id;
     }
 
-    public User getUserID() {
+    public Users getUserID() {
         return userID;
     }
 
-    public void setUserID(User userID) {
+    public void setUserID(Users userID) {
         this.userID = userID;
     }
 
