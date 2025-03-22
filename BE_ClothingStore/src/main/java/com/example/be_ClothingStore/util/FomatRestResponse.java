@@ -22,24 +22,27 @@ public class FomatRestResponse implements ResponseBodyAdvice<Object> {
 
     // fomat lại response
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
-            Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-                HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
-                int status = servletResponse.getStatus();
-                RestResponse<Object> res = new RestResponse<Object>();
-                res.setStatusCode(status);
+    public Object beforeBodyWrite(
+            Object body,
+            MethodParameter returnType,
+            MediaType selectedContentType,
+            Class selectedConverterType,
+            ServerHttpRequest request,
+            ServerHttpResponse response) {
+        HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
+        int status = servletResponse.getStatus();
 
-                if (body instanceof String){
-                    return body;
-                }
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(status);
 
-                if (status>=400) {
-                    return body;
-                } else {
-                    res.setData(body);
-                    res.setMessage("Call api success");
-                }
-                return res;
+        if (status >= 400) {
+            return body;
+        } else {
+            res.setData(body);
+            res.setMessage("CALL API SUCCESS");
+        }
+
+        return res;
     }
     
 }
