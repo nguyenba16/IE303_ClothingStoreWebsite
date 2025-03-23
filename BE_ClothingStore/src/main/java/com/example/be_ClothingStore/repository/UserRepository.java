@@ -12,4 +12,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface UserRepository extends MongoRepository<Users, String>  {
     // Để đổi tìm kiểu objectid chứ k tìm kiểu String
     Optional<Users> findById(ObjectId id);
+    Optional<Users> findByEmail(String email);
 }

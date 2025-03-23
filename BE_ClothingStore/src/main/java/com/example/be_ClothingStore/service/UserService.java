@@ -26,4 +26,12 @@ public class UserService {
         }
         return null;
     }
+    public Users handleGetUserbyEmail(String email){
+        Optional<Users> user = this.userRepository.findByEmail(email);
+        System.out.println("user: " + email);
+        if (user.isPresent()){
+            return user.get();
+        } 
+        return null;
+    }
 }
