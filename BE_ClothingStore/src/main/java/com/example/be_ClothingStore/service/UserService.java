@@ -1,10 +1,10 @@
 package com.example.be_ClothingStore.service;
 import java.util.Optional;
 import org.bson.types.ObjectId;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.example.be_ClothingStore.domain.Users;
 import com.example.be_ClothingStore.repository.UserRepository;
-
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -31,7 +31,7 @@ public class UserService {
         System.out.println("user: " + email);
         if (user.isPresent()){
             return user.get();
-        } 
+        }
         return null;
     }
 }

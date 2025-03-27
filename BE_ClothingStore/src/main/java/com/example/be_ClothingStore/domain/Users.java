@@ -15,7 +15,9 @@ public class Users {
     private String nameAccount;
     private String password;
     private String address;
-    private String role;
+
+    private Role role;
+    
     private Image avatar;
     private Image imageBody;
     @CreatedDate
@@ -50,7 +52,7 @@ public class Users {
     public void setAddress(String address) {
         this.address = address;
     }
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
     public void setAvatar(Image avatar) {
@@ -80,7 +82,7 @@ public class Users {
     public String getAddress() {
         return address;
     }
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
     public Image getAvatar() {
