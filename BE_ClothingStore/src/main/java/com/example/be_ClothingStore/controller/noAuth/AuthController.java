@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be_ClothingStore.domain.Users;
+import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
 import com.example.be_ClothingStore.domain.dto.LoginDTO;
 import com.example.be_ClothingStore.domain.dto.ResponseLoginDTO;
 import com.example.be_ClothingStore.service.UserService;
@@ -85,13 +86,18 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody Users user) {
-        String  hashPassword = this.passwordEncoder.encode(user.getPassword());
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
         Users newUser = this.userService.handleCreateUser(user);
         if (newUser != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        } else {
+            RestResponse errorResponse = new RestResponse(400, "BAD_REQUEST", "Email đã tồn tại!", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email đã tồn tại!");
     }
     
     

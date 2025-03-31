@@ -56,8 +56,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/no-auth/**").permitAll() //người chưa đăng nhập
-                                .requestMatchers("/auth/customer/**", "/no-auth/**").hasRole("CUSTOMER") //người đã đăng nhập
-                                .requestMatchers("/auth/admin/**", "/auth/customer/**","/no-auth/**").hasRole("ADMIN") //người đã đăng nhập làm admin
+                                .requestMatchers("/auth/customer/**").hasRole("CUSTOMER") //người đã đăng nhập
+                                .requestMatchers("/auth/admin/**", "/auth/customer/**").hasRole("ADMIN") //người đã đăng nhập làm admin
                                 .anyRequest().authenticated())
                                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(customAuthenticationEntryPoint))
