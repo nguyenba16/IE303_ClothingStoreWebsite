@@ -7,7 +7,14 @@ public class RestResponse<T> {
     private Object message;
     // Vì data chưa biết nó sẽ ntn nên dùng generate
     private T data;
-    
+    public RestResponse(){}
+    public RestResponse(int statusCode, String error, Object message, T data) {
+        this.statusCode = statusCode;
+        this.error = error;
+        this.message = message;
+        this.data = data;
+    }
+
     public int getStatusCode() {
         return statusCode;
     }

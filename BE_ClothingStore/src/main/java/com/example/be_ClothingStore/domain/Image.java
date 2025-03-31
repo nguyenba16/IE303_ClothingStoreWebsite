@@ -4,9 +4,15 @@ public class Image {
         private String url;
         private String publicId;
         private String color;
+
+        public Image(String url) {
+            this.url = url;
+        }
+
         public String getColor() {
             return color;
         }
+
         public void setColor(String color) {
             this.color = color;
         }

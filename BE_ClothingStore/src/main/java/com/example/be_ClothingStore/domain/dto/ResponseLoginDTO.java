@@ -1,11 +1,22 @@
 package com.example.be_ClothingStore.domain.dto;
 
 public class ResponseLoginDTO {
-    private String accessToken;
-    public String getAccessToken(){
-        return accessToken;
+    private String email;
+    private String role;
+
+    public String getEmail() {
+        return email;
     }
-    public void setAccessToken(String accessToken){
-        this.accessToken = accessToken;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

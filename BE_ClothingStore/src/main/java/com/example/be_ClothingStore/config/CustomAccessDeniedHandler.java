@@ -34,8 +34,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         String errorMessage = Optional.ofNullable(accessDeniedException.getCause())
                 .map(Throwable::getMessage)
                 .orElse(accessDeniedException.getMessage());
-res.setMessage("Không có quyền truy cập!");
-                
+        res.setMessage("Không có quyền truy cập!");
         res.setError(errorMessage);
         mapper.writeValue(response.getWriter(), res);
     }

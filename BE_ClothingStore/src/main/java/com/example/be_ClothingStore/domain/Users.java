@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "Users")
 public class Users {
     @Id 
@@ -13,6 +16,8 @@ public class Users {
     private String email;
     private String phoneNumber;
     private String nameAccount;
+
+    @JsonProperty("password")
     private String password;
     private String address;
 
@@ -76,6 +81,7 @@ public class Users {
     public String getNameAccount() {
         return nameAccount;
     }
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
