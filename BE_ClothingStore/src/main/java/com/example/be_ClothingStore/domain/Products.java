@@ -23,7 +23,7 @@ public class Products {
     private String[] sizes;
     private int stock;
     private String desc;
-    private Image productImage;
+    private Image[] productImage;
     private float rating;
 
     @CreatedDate
@@ -35,7 +35,7 @@ public class Products {
     public Products() {}
 
     public Products(String id, String productName, Double price, String[] colors, String[] sizes, int stock, String desc,
-            Image productImage, Categrories categroryID) {
+            Image[] productImage, Categrories categroryID) {
         this.id = id;
         this.productName = productName;
         this.price = price;
@@ -68,7 +68,7 @@ public class Products {
     public String getDesc() {
         return desc;
     }
-    public Image getProductImage() {
+    public Image[] getProductImage() {
         return productImage;
     }
     public Categrories getCategroryID() {
@@ -104,7 +104,7 @@ public class Products {
     public void setDesc(String desc) {
         this.desc = desc;
     }
-    public void setProductImage(Image productImage) {
+    public void setProductImage(Image[] productImage) {
         this.productImage = productImage;
     }
     public void setCategroryID(Categrories categroryID) {

@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+	implementation("com.cloudinary:cloudinary-http44:1.33.0")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
