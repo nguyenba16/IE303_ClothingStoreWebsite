@@ -1,6 +1,7 @@
 package com.example.be_ClothingStore.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -13,14 +14,13 @@ public class Products {
     @Id
     private String id;
 
-    // Tham chiếu đến Categrories
     @DBRef
-    private Categrories categroryID;
+    private Categrories categrory;
 
     private String productName;
     private Double price;
-    private String[] colors;
-    private String[] sizes;
+    private List<String> colors;
+    private List<String> sizes;
     private int stock;
     private String desc;
     private Image[] productImage;
@@ -34,8 +34,8 @@ public class Products {
 
     public Products() {}
 
-    public Products(String id, String productName, Double price, String[] colors, String[] sizes, int stock, String desc,
-            Image[] productImage, Categrories categroryID) {
+    public Products(String id, String productName, Double price, List<String> colors, List<String> sizes, int stock, String desc,
+            Image[] productImage, Categrories categrory) {
         this.id = id;
         this.productName = productName;
         this.price = price;
@@ -44,7 +44,7 @@ public class Products {
         this.stock = stock;
         this.desc = desc;
         this.productImage = productImage;
-        this.categroryID = categroryID;
+        this.categrory = categrory;
         this.rating = 0;
     }
     public String getId() {
@@ -56,10 +56,10 @@ public class Products {
     public Double getPrice() {
         return price;
     }
-    public String[] getColors() {
+    public List<String> getColors() {
         return colors;
     }
-    public String[] getSizes() {
+    public List<String> getSizes() {
         return sizes;
     }
     public int getStock() {
@@ -71,8 +71,8 @@ public class Products {
     public Image[] getProductImage() {
         return productImage;
     }
-    public Categrories getCategroryID() {
-        return categroryID;
+    public Categrories getCategrory() {
+        return categrory;
     }
     public float getRating() {
         return rating;
@@ -92,10 +92,10 @@ public class Products {
     public void setPrice(Double price) {
         this.price = price;
     }
-    public void setColors(String[] colors) {
+    public void setColors(List<String> colors) {
         this.colors = colors;
     }
-    public void setSizes(String[] sizes) {
+    public void setSizes(List<String> sizes) {
         this.sizes = sizes;
     }
     public void setStock(int stock) {
@@ -107,8 +107,8 @@ public class Products {
     public void setProductImage(Image[] productImage) {
         this.productImage = productImage;
     }
-    public void setCategroryID(Categrories categroryID) {
-        this.categroryID = categroryID;
+    public void setCategrory(Categrories categrory) {
+        this.categrory = categrory;
     }
     public void setRating(float rating) {
         this.rating = rating;

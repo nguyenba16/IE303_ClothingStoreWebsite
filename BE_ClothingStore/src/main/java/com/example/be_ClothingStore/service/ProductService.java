@@ -29,7 +29,7 @@ public class ProductService {
         return null;
     }
 
-    public void addAProduct(Products products){
-        this.productRepository.save(products);
+    public Products addAProduct(Products products){
+        return this.productRepository.save(products);
     }
 }
