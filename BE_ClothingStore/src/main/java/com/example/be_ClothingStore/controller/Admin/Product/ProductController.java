@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.be_ClothingStore.domain.Categrories;
 import com.example.be_ClothingStore.domain.Image;
 import com.example.be_ClothingStore.domain.Products;
+import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
 import com.example.be_ClothingStore.repository.CategroryRepository;
 import com.example.be_ClothingStore.repository.ProductRepository;
 import com.example.be_ClothingStore.service.CloudinaryService;
@@ -19,7 +20,11 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
@@ -83,5 +88,92 @@ public class ProductController {
         newProduct.setProductImage(uploadedImages.toArray(new Image[0]));
         Products productAdded = productService.addAProduct(newProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(productAdded);
+    }
+
+    @PatchMapping(value = "/products/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateProduct(@PathVariable("productId") String productId,
+                            @RequestParam(value = "sizes", required = false) List<String> sizes,
+                            @RequestParam(value = "colors", required = false) List<String> colors, 
+                            @RequestParam(value = "categroryID", required = false) String categroryID,
+                            @RequestParam(value = "productName", required = false) String productName,
+                            @RequestParam(value = "price", required = false) Double price,
+                            @RequestParam(value = "stock", required = false) Integer stock,
+                            @RequestParam(value = "desc", required = false) String desc,
+                            @RequestParam(value = "rating", required = false) Float rating,
+                            @RequestParam(value = "productImage", required = false) List<MultipartFile> productImage)throws IdInvalidException{
+        Products products = productService.handleFetchProduct(productId);
+        if (products == null) {
+            throw new IdInvalidException("Không tìm thấy sản phẩm nào hợp lệ với id!");
+        }
+        // List<String> oldColors = products.getColors();
+        // if (productImage.size() != 0 && productImage.size() != oldColors.size() ){
+        //     RestResponse<?> errorResponse = new RestResponse<>(400, "BAD_REQUEST", "Số ảnh truyền không đủ với số màu!", null);
+        //     return ResponseEntity.status(HttpStatus.OK).body(errorResponse);
+        // }
+        Image[] oldImages = products.getProductImage();
+        
+        if (categroryID != null){
+            Optional<Categrories> categoryOpt = categoryRepository.findById(categroryID);
+            if (categoryOpt.isEmpty()) {
+                throw new IdInvalidException("Không tìm thấy categrory với id trên!");
+            }
+            Categrories category = categoryOpt.get();
+            products.setCategrory(category);
+        }
+        if (colors != null){
+            products.setColors(colors);
+            for(int i =0; i<colors.size(); i++){
+                Image[] images = products.getProductImage();
+                Image img = images[i];
+                img.setColor(colors.get(i));
+            }
+        }
+        if (productName!= null){
+            products.setProductName(productName);
+        }
+        if (price != null){
+            products.setPrice(price);
+        }
+        if (stock != null){
+            products.setStock(stock);
+        }
+        if (desc != null){
+            products.setDesc(desc);
+        }
+        if (rating != null){
+            products.setRating(rating);
+        }
+        if (sizes != null){
+            products.setSizes(sizes);
+        }
+        if (productImage != null && !productImage.isEmpty()){
+            List<Image> uploadedImages = new ArrayList<>();
+            for (int i = 0; i < productImage.size(); i++) {
+                if(productImage.get(i) != oldImages[i]){
+                    MultipartFile image = productImage.get(i);
+                    String color = colors.get(i);
+                    String oldImageId = (oldImages != null && i < oldImages.length) ? oldImages[i].getPublicId() : null;
+                    Image img = cloudinaryService.uploadImage(image, color, oldImageId);
+                    uploadedImages.add(img);
+                }
+            }
+            products.setProductImage(uploadedImages.toArray(new Image[0]));
+        }
+        Products updatedProduct = productService.addAProduct(products);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+    }
+
+    @DeleteMapping("/products/delete/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("productId") String productId) {
+        try {
+            if (this.productService.deleteProduct(productId)) {
+                RestResponse<?> response = new RestResponse<>(200, null, "Đã xóa sản phẩm thành công!", null);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+        } catch (IdInvalidException ex) {
+            RestResponse<?> response = new RestResponse<>(400, ex.getMessage(), ex.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 }

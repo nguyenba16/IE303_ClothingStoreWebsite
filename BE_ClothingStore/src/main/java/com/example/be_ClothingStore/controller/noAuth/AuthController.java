@@ -95,7 +95,7 @@ public class AuthController {
         if (newUser != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
         } else {
-            RestResponse errorResponse = new RestResponse(400, "BAD_REQUEST", "Email đã tồn tại!", null);
+            RestResponse<?> errorResponse = new RestResponse<>(400, "BAD_REQUEST", "Email đã tồn tại!", null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }

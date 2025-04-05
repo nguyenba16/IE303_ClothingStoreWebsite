@@ -54,7 +54,7 @@ public class CustomerController {
     }
 
     @PatchMapping(value = "/profile/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProfile(@RequestParam Map<String, String> updates, @RequestPart("avatar") MultipartFile avatar, @RequestPart("imageBody") MultipartFile imageBody, HttpServletRequest request
+    public ResponseEntity<?> updateProfile(@RequestParam Map<String, String> updates, @RequestPart(value = "avatar", required = false) MultipartFile avatar, @RequestPart(value = "imageBody", required = false) MultipartFile imageBody, HttpServletRequest request
     ) throws IdInvalidException {
         String token = securityUtil.getTokenFromCookie(request);
         String userId = securityUtil.getUserIdFromToken(token);
