@@ -105,11 +105,6 @@ public class ProductController {
         if (products == null) {
             throw new IdInvalidException("Không tìm thấy sản phẩm nào hợp lệ với id!");
         }
-        // List<String> oldColors = products.getColors();
-        // if (productImage.size() != 0 && productImage.size() != oldColors.size() ){
-        //     RestResponse<?> errorResponse = new RestResponse<>(400, "BAD_REQUEST", "Số ảnh truyền không đủ với số màu!", null);
-        //     return ResponseEntity.status(HttpStatus.OK).body(errorResponse);
-        // }
         Image[] oldImages = products.getProductImage();
         
         if (categroryID != null){

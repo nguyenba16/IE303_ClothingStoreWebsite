@@ -1,25 +1,22 @@
 package com.example.be_ClothingStore.domain;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
 public class Items {
-    @DBRef
-    private Products productID;
+    private String productID;
     private int quantity;
     private String size;
     private String color;
     
-    public Products getProductID() {
+    public String getProductID() {
         return productID;
     }
-    
-    public Items(Products productID, int quantity, String size) {
+    public Items() {}
+    public Items(String productID, int quantity, String size) {
         this.productID = productID;
         this.quantity = quantity;
         this.size = size;
     }
 
-    public void setProductID(Products productID) {
+    public void setProductID(String productID) {
         this.productID = productID;
     }
     public int getQuantity() {

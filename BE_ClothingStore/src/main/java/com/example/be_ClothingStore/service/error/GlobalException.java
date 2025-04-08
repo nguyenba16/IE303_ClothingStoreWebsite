@@ -30,6 +30,15 @@ public class GlobalException {
         res.setMessage("Email or password incorrect!");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
+    
+    @ExceptionHandler(IdInvalidException.class)
+    public ResponseEntity<?> handleIdInvalidException(IdInvalidException ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
+        res.setError(ex.getMessage());
+        res.setMessage("User not found with ID!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+    }
 
     // exception khi login email hoặc password để trống
     @ExceptionHandler(MethodArgumentNotValidException.class)
