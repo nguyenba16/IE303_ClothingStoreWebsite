@@ -1,1 +1,1 @@
-cấu hình nha
+cấu hình ở application.properties nha
