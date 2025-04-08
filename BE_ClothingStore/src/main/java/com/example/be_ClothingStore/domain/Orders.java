@@ -10,14 +10,13 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document (collection = "Oders")
-public class Oders {
+public class Orders {
     @Id
     private String id;
     @DBRef
     private Users userID;
 
-    @DBRef
-    private Payments paymentID;
+    private String paymentID;
 
     private List<Items> oderItems;
 
@@ -45,11 +44,11 @@ public class Oders {
         this.userID = userID;
     }
 
-    public Payments getPaymentID() {
+    public String getPaymentID() {
         return paymentID;
     }
 
-    public void setPaymentID(Payments paymentID) {
+    public void setPaymentID(String paymentID) {
         this.paymentID = paymentID;
     }
 

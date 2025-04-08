@@ -45,22 +45,13 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
         // Xác thực user
         Authentication authentication = authenticationMangerBuilder.getObject().authenticate(authenticationToken);
-
         String token = this.securityUtil.createToken(authentication);
-        
-        // ResponseLoginDTO res = new ResponseLoginDTO();
-        // res.setAccessToken(token);
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/"); // Áp dụng toàn bộ domain
         cookie.setMaxAge(60 * 60 * 24); // Hết hạn sau 1 ngày
         response.addCookie(cookie);
-
-        // Lấy bằng cách
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // String email = authentication.getName(); // Lấy email của user
-        // String role = authentication.getAuthorities().toString(); // Lấy quyền
         ResponseLoginDTO responseDTO = new ResponseLoginDTO();
         responseDTO.setEmail(loginDTO.getEmail());
         responseDTO.setRole(authentication.getAuthorities().toString());
@@ -95,7 +86,7 @@ public class AuthController {
         if (newUser != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
         } else {
-            RestResponse errorResponse = new RestResponse(400, "BAD_REQUEST", "Email đã tồn tại!", null);
+            RestResponse<?> errorResponse = new RestResponse<>(400, "BAD_REQUEST", "Email đã tồn tại!", null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }

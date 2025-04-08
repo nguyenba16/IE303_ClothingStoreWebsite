@@ -1,5 +1,6 @@
 package com.example.be_ClothingStore.config;
 
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 
 @Configuration
@@ -67,8 +69,15 @@ public class SecurityConfig {
                 .accessDeniedHandler(customAccessDeniedHandler) //403 
             )
                 .formLogin(f -> f.disable()) //disable form login
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.addAllowedOrigin("http://localhost:5173");  // Cho phép frontend tại localhost:5173
+                    config.addAllowedMethod("*");  // Cho phép tất cả các phương thức HTTP
+                    config.addAllowedHeader("*");  // Cho phép tất cả các header
+                    config.setAllowCredentials(true);  // Quan trọng: cho phép credentials
+                    return config;
+                }));
         return http.build();
     }
 
@@ -106,4 +115,5 @@ public class SecurityConfig {
          jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
          return jwtAuthenticationConverter;
      }
+    
 }

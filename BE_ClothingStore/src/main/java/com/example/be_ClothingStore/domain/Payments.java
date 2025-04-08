@@ -3,21 +3,17 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Payments")
 public class Payments {
     @Id
     private String id;
-
-    @DBRef
-    private Users userID;
-
-    @DBRef
-    private Oders orderID;
-
+    private String userID;
+    private String orderID;
+    private String bankName;
     private String status;
+    private String errorMessage;
     @CreatedDate
     private LocalDateTime createAt;
 
@@ -28,23 +24,30 @@ public class Payments {
         return id;
     }
 
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
     public void setId(String id) {
         this.id = id;
     }
 
-    public Users getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(Users userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
-    public Oders getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(Oders orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
@@ -70,6 +73,14 @@ public class Payments {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
     
     

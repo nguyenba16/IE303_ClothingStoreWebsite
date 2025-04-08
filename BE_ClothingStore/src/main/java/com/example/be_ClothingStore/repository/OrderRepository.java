@@ -1,0 +1,14 @@
+package com.example.be_ClothingStore.repository;
+
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.be_ClothingStore.domain.Orders;
+
+@Repository
+public interface OrderRepository extends MongoRepository<Orders, String> {
+    Optional<Orders> findById(ObjectId id);
+}
