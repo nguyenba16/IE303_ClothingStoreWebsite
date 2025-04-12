@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,20 +25,18 @@ public class VnPayController {
     private final PaymentService paymentService;
     private final OrderService orderService;
     private final SecurityUtil securityUtil;
-    public VnPayController(PaymentService paymentService, OrderService orderService, SecurityUtil securityUtil){
+    private final VnPayService vnPayService;
+    public VnPayController(PaymentService paymentService,VnPayService vnPayService, OrderService orderService, SecurityUtil securityUtil){
         this.paymentService = paymentService;
         this.orderService = orderService;
         this.securityUtil = securityUtil;
-    }
+        this.vnPayService = vnPayService;
+    }  
 
-    @Autowired
-    private VnPayService vnPayService;
-
-    @PostMapping("/payments/{userId}")
+    @PostMapping("/payments")
     public ResponseEntity<?> submidOrder(@RequestParam("totalPrice") int totalPrice,
                             @RequestParam("orderId") String orderId,
-                            HttpServletRequest request, 
-                            @PathVariable("userId") String userId) throws IdInvalidException{
+                            HttpServletRequest request) throws IdInvalidException{
 
         Orders order = this.orderService.findOrderById(orderId);
         if (order == null){

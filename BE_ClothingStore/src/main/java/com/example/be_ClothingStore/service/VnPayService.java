@@ -13,7 +13,6 @@ import java.util.*;
 // dsfdsa
 @Service
 public class VnPayService {
-
     public String createOrder(int total, String orderInfor, String urlReturn){
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -53,7 +52,7 @@ public class VnPayService {
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-        Iterator<?> itr = fieldNames.iterator();
+        Iterator itr = fieldNames.iterator();
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
             String fieldValue = (String) vnp_Params.get(fieldName);
@@ -76,10 +75,11 @@ public class VnPayService {
                 }
             }
         }
+        System.out.println("============adas=============: "+ hashData);
         String queryUrl = query.toString();
         String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VnPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = VnPayConfig.vnp_Url + "?" + queryUrl;
         return paymentUrl;
     }
 

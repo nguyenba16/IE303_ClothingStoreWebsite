@@ -1,10 +1,7 @@
 package com.example.be_ClothingStore.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -12,14 +9,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-// ádasdasd
+
 @Component
 public class VnPayConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    public static String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_Returnurl = "/customer/vnpay-payment";
-    public static String vnp_TmnCode;
-    public static String vnp_HashSecret;
-    public static String vnp_apiUrl;
+    public static String vnp_TmnCode ="ZASC1BJ8";
+    public static String vnp_HashSecret ="G91GOSHPX610N5FYGL6M17HEAK0VY5EF"; 
+    public static String vnp_apiUrl="https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+
     public static String md5(String message) {
         String digest = null;
         try {
@@ -121,20 +119,5 @@ public class VnPayConfig {
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         }
         return sb.toString();
-    }
-
-    @Value("${vnpay.tmnCode}")
-    public void setVnp_TmnCode(String code) {
-        VnPayConfig.vnp_TmnCode = code;
-    }
-
-    @Value("${vnpay.hashSecret}")
-    public void setVnp_HashSecret(String secret) {
-        VnPayConfig.vnp_HashSecret = secret;
-    }
-
-    @Value("${vnpay.vnpUrl}")
-    public void setVnp_apiUrl(String url) {
-        VnPayConfig.vnp_apiUrl = url;
     }
 }

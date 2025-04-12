@@ -36,7 +36,7 @@ public class GlobalException {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.NOT_FOUND.value());
         res.setError(ex.getMessage());
-        res.setMessage("User not found with ID!");
+        res.setMessage("Not found with ID!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
     }
 
