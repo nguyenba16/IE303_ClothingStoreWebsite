@@ -8,17 +8,28 @@ import org.springframework.stereotype.Service;
 
 import com.example.be_ClothingStore.repository.ProductRepository;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
+import com.example.be_ClothingStore.domain.Categrories;
 import com.example.be_ClothingStore.domain.Products;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    public ProductService(ProductRepository productRepository){
+    private final CategoryService categroryService;
+    public ProductService(ProductRepository productRepository, CategoryService categroryService){
         this.productRepository = productRepository;
+        this.categroryService = categroryService;
     }
 
     public  List<Products> fetchAllProducts(){
         return this.productRepository.findAll();
+    }
+
+    public List<Products> fetchProductsByCate(String category){
+        Categrories cate = this.categroryService.findByCateName(category);
+        if (cate == null){
+            return null;
+        }
+        return this.productRepository.findByCategrory(cate);
     }
 
     public Products handleFetchProduct(String productId){

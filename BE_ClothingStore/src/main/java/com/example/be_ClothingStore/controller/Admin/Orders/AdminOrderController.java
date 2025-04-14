@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.service.annotation.PatchExchange;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,9 +28,21 @@ public class AdminOrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<?> getAllOrders() {
-        List<Orders> orders = this.orderService.getAllOrder();
-        return ResponseEntity.ok().body(orders);
+    public ResponseEntity<?> getOrders(@RequestParam(name = "status", required = false) String status) {
+        List<Orders> orders = null;
+        if (status != null && !status.isEmpty()) {
+            orders = this.orderService.getOrderByStatus(status);
+        } else {
+            orders = this.orderService.getAllOrder();
+        }
+        if(orders == null || orders.isEmpty()) {
+            RestResponse<List<Orders>> errorResponse = new RestResponse<>(HttpStatus.NOT_FOUND.value(),
+                "Không tìm thấy đơn hàng nào.",
+                "Không tìm thấy đơn hàng nào.",
+                null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
     
     @PatchMapping("/orders/update/{orderId}")

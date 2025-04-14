@@ -38,7 +38,15 @@ public class OrderService {
         }
         return null;
     }
-    
+
+    public List<Orders> getOrderByStatus(String status){
+        List<Orders> orders = this.orderRepository.findByStatus(status);
+        if (orders.size() != 0){
+            return orders;
+        }
+        return null;
+    }    
+
     public Boolean deleteOrder(String orderId) throws IdInvalidException {
         ObjectId orderIdObject = new ObjectId(orderId);
         Optional<Orders> order= this.orderRepository.findById(orderIdObject);
