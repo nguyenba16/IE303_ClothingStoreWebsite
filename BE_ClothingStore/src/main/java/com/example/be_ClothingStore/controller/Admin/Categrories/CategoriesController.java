@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be_ClothingStore.domain.Categrories;
-import com.example.be_ClothingStore.service.CategroryService;
+import com.example.be_ClothingStore.service.CategoryService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/admin")
-public class CategroriesController {
-    private final CategroryService categroryService;
-    public CategroriesController(CategroryService categroryService){
+public class CategoriesController {
+    private final CategoryService categroryService;
+    public CategoriesController(CategoryService categroryService){
         this.categroryService = categroryService;
     }
 

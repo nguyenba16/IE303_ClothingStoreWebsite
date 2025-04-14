@@ -1,5 +1,6 @@
 package com.example.be_ClothingStore.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -11,4 +12,5 @@ import com.example.be_ClothingStore.domain.Orders;
 @Repository
 public interface OrderRepository extends MongoRepository<Orders, String> {
     Optional<Orders> findById(ObjectId id);
+    List<Orders> findByStatus(String status);
 }

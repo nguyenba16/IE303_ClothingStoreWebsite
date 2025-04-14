@@ -12,4 +12,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 @Repository
 public interface CategroryRepository extends MongoRepository<Categrories, String> {
      Optional<Categrories> findById (ObjectId id);
+     Optional<Categrories> findByCategroryName(String categroryName);
 }

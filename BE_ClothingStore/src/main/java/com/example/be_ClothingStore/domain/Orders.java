@@ -9,11 +9,15 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Document (collection = "Oders")
 public class Orders {
     @Id
     private String id;
+    
     @DBRef
+    @JsonIgnoreProperties({"password", "role", "imageBody"})
     private Users userID;
 
     private String paymentID;
