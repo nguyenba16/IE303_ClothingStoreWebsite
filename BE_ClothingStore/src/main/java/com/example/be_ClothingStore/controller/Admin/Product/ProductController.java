@@ -11,7 +11,6 @@ import com.example.be_ClothingStore.domain.Image;
 import com.example.be_ClothingStore.domain.Products;
 import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
 import com.example.be_ClothingStore.repository.CategroryRepository;
-import com.example.be_ClothingStore.repository.ProductRepository;
 import com.example.be_ClothingStore.service.CloudinaryService;
 import com.example.be_ClothingStore.service.ProductService;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
@@ -30,20 +29,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequestMapping("/admin")
 public class ProductController {
-
-    private final ProductRepository productRepository;
-
-    private final CategroryRepository categroryRepository;
     private final CloudinaryService cloudinaryService;
     private final ProductService productService;
 
     @Autowired
     private CategroryRepository categoryRepository;
-    public ProductController(ProductService productService, CloudinaryService cloudinaryService, CategroryRepository categroryRepository, ProductRepository productRepository){
+    public ProductController(ProductService productService, CloudinaryService cloudinaryService){
         this.productService = productService;
         this.cloudinaryService = cloudinaryService;
-        this.categroryRepository = categroryRepository;
-        this.productRepository = productRepository;
     }
 
     @PostMapping("/products/add")
@@ -75,7 +68,6 @@ public class ProductController {
         newProduct.setColors(colors);
 
         List<Image> uploadedImages = new ArrayList<>();
-        System.out.println("productImages.size()==========================: " + productImages.size());
         for (MultipartFile image : productImages) {
             System.out.println("Received image: " + image.getOriginalFilename());
         }

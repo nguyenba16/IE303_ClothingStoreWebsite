@@ -7,14 +7,18 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import com.example.be_ClothingStore.domain.Orders;
+import com.example.be_ClothingStore.domain.Users;
 import com.example.be_ClothingStore.repository.OrderRepository;
+import com.example.be_ClothingStore.repository.UserRepository;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    public OrderService(OrderRepository orderRepository){
+    private final UserRepository userRepository;
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository){
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
     }
 
     public Orders addAOrder (Orders orders){
@@ -55,5 +59,16 @@ public class OrderService {
         }
         orderRepository.deleteById(orderId);
         return true;
+    }
+
+    public List<Orders> findAllOrderbyUserId(String userId){
+        ObjectId userIdObj = new ObjectId(userId);
+        Optional<Users> user = this.userRepository.findById(userIdObj);
+        Users owner = null;
+        if (user.isPresent()){
+            owner = user.get();
+        }
+        List<Orders> orders = this.orderRepository.findOrderByUserID(owner);
+        return orders;
     }
 }
