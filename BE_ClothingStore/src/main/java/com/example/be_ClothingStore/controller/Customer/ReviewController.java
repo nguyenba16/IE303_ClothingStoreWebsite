@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import com.example.be_ClothingStore.domain.Products;
 import com.example.be_ClothingStore.domain.Reviews;
 import com.example.be_ClothingStore.domain.Users;
 import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
 import com.example.be_ClothingStore.repository.UserRepository;
+import com.example.be_ClothingStore.service.ProductService;
 import com.example.be_ClothingStore.service.ReviewService;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
 
@@ -33,10 +35,12 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final UserRepository userRepository;
     private final SecurityUtil securityUtil;
-    public ReviewController (SecurityUtil securityUtil,ReviewService reviewService, UserRepository userRepository){
+    private final ProductService productService;
+    public ReviewController (ProductService productService, SecurityUtil securityUtil,ReviewService reviewService, UserRepository userRepository){
         this.reviewService = reviewService;
         this.userRepository = userRepository;
         this.securityUtil = securityUtil;
+        this.productService = productService;
     }
 
     @PostMapping("/create")
@@ -50,9 +54,11 @@ public class ReviewController {
         ObjectId userIdObj = new ObjectId(userId);
         Optional<Users> owner = this.userRepository.findById(userIdObj);
         if (!owner.isPresent()){
-            RestResponse<Users> res = new RestResponse<>(HttpStatus.BAD_REQUEST.value(),
-            "Không tìm thấy user nào từ id","Không tìm thấy user nào từ id", null);
-           return ResponseEntity.badRequest().body(res);
+            throw new IdInvalidException("Không tìm thấy user với Id này!");
+        }
+        Optional<Products> products = this.productService.findProductById(reviews.getProductID());
+        if (!products.isPresent()){
+            throw new IdInvalidException("Không tìm thấy product với Id này!");
         }
         Reviews.setUserID(owner.get());
         Reviews.setComment(reviews.getComment());
@@ -70,10 +76,11 @@ public class ReviewController {
         }
         String userId = this.securityUtil.getUserIdFromToken(token);
         Boolean response = this.reviewService.deleteAReview(reviewId, userId);
+        System.out.println("==asd=sad=sa======"+ response);
         if (response) {
-            // RestResponse<Reviews> res = new RestResponse<>(HttpStatus.OK.value(),
-            // null,"Đã xóa review thành công!", null);
-           return ResponseEntity.ok().body(response);
+            RestResponse<Reviews> res = new RestResponse<>(HttpStatus.OK.value(),
+            null,"Đã xóa review thành công!", null);
+           return ResponseEntity.ok().body(res);
         } else {
             RestResponse<Users> res = new RestResponse<>(HttpStatus.BAD_REQUEST.value(),
             "Không thể xóa review (sai reviewId hoặc k có quyền xóa id)","Không thể xóa review (sai reviewId hoặc k có quyền xóa id)", null);
