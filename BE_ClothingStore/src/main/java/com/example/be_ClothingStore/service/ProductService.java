@@ -10,6 +10,7 @@ import com.example.be_ClothingStore.repository.ProductRepository;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
 import com.example.be_ClothingStore.domain.Categrories;
 import com.example.be_ClothingStore.domain.Products;
+import com.example.be_ClothingStore.domain.Reviews;
 
 @Service
 public class ProductService {
@@ -40,6 +41,23 @@ public class ProductService {
         }
         return null;
     }
+
+    public Boolean updateProductRating(String productId, List<Reviews> reviews) throws IdInvalidException{
+        Products products = this.findProductById(productId).get();
+        if (products == null){
+            throw new IdInvalidException("Không tìm thấy product với id này!");
+        }
+        
+        float ratingTotal = 0;
+        for (Reviews r: reviews){
+            ratingTotal += r.getRating();
+        }
+        
+        float rating = Math.round((ratingTotal / reviews.size()) * 10f) / 10f;
+        products.setRating(rating);
+        this.productRepository.save(products);
+        return true;
+    } 
 
     public Products addAProduct(Products products){
         return this.productRepository.save(products);
