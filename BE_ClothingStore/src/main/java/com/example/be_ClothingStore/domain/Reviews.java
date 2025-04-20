@@ -7,23 +7,24 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Document(collection = "Reviews")
 public class Reviews {
     @Id
     private String id;
-
+    
     @DBRef
+    @JsonIgnoreProperties({"password", "role", "imageBody"})
     private Users userID;
-
-    @DBRef
-    private Products productID;
-
+    private String productID;
     private String comment;
     private float rating;
     @CreatedDate
     private LocalDateTime createAt;
 
-    public Reviews(String id, Users userID, Products productID, String comment, float rating, LocalDateTime createAt) {
+    public Reviews(){}
+    public Reviews(String id, Users userID, String productID, String comment, float rating, LocalDateTime createAt) {
         this.id = id;
         this.userID = userID;
         this.productID = productID;
@@ -43,10 +44,10 @@ public class Reviews {
     public void setUserID(Users userID) {
         this.userID = userID;
     }
-    public Products getProductID() {
+    public String getProductID() {
         return productID;
     }
-    public void setProductID(Products productID) {
+    public void setProductID(String productID) {
         this.productID = productID;
     }
     public String getComment() {
