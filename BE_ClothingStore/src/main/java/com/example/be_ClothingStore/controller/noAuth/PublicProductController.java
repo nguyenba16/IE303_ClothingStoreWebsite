@@ -4,16 +4,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be_ClothingStore.domain.Products;
+import com.example.be_ClothingStore.domain.RequestSearch.RequestSearch;
 import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
+import com.example.be_ClothingStore.domain.ResultSearch.ResultSearch;
 import com.example.be_ClothingStore.service.ProductService;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
-
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -59,6 +61,11 @@ public class PublicProductController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
-    
+
+    @PostMapping("/products/search")
+    public ResponseEntity<?> searchProducts(@RequestBody RequestSearch requestSearch) {
+        ResultSearch response = this.productService.searchProducts(requestSearch);
+        return ResponseEntity.ok().body(response);
+    }
     
 }

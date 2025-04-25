@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import com.example.be_ClothingStore.controller.Admin.Orders.AdminOrderController;
 import com.example.be_ClothingStore.domain.Items;
 import com.example.be_ClothingStore.domain.Orders;
 import com.example.be_ClothingStore.domain.Users;
@@ -25,10 +26,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-
 @Controller
 @RequestMapping("/customer")
 public class OrderController {
+
     private final OrderService orderService;
     private final UserService userService;
     private final SecurityUtil securityUtil;
@@ -61,13 +62,20 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<?> postMethodName(HttpServletRequest request) throws IdInvalidException {
+    public ResponseEntity<?> postMethodName(HttpServletRequest request, @RequestParam("status") String status) throws IdInvalidException {
         String token = this.securityUtil.getTokenFromCookie(request);
         if (token == null) {
             throw new IdInvalidException("Không tìm thấy token trong cookie!");
         }
         String userId = this.securityUtil.getUserIdFromToken(token);
-        List<Orders> orders = this.orderService.findAllOrderbyUserId(userId);
+        
+        List<Orders> orders = null;
+        if (status.equals("all")) {
+            orders = this.orderService.findAllOrderbyUserId(userId);
+        } else {
+            orders = this.orderService.findUserOrderByStatus(userId, status);
+        }
+         
         return ResponseEntity.ok().body(orders);
     }
 
@@ -85,7 +93,7 @@ public class OrderController {
     }
     
     // Customer chỉ dc hủy đơn khi đơn chưa sang trạng thái confirm - mới pending
-    @DeleteMapping("/orders/cancel-order/{orderId}")
+    @PostMapping("/orders/cancel-order/{orderId}")
     public ResponseEntity<?> cancelOrder(@PathVariable("orderId") String orderId){
         Orders order = this.orderService.findOrderById(orderId);
         if (order == null){

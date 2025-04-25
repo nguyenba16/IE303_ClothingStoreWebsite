@@ -5,20 +5,29 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.example.be_ClothingStore.repository.ProductRepository;
 import com.example.be_ClothingStore.service.error.IdInvalidException;
 import com.example.be_ClothingStore.domain.Categrories;
 import com.example.be_ClothingStore.domain.Products;
 import com.example.be_ClothingStore.domain.Reviews;
+import com.example.be_ClothingStore.domain.RequestSearch.RequestSearch;
+import com.example.be_ClothingStore.domain.ResultSearch.Pagination;
+import com.example.be_ClothingStore.domain.ResultSearch.ResultSearch;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categroryService;
-    public ProductService(ProductRepository productRepository, CategoryService categroryService){
+    private final MongoTemplate mongoTemplate;
+    public ProductService(MongoTemplate mongoTemplate,ProductRepository productRepository, CategoryService categroryService){
         this.productRepository = productRepository;
         this.categroryService = categroryService;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public  List<Products> fetchAllProducts(){
@@ -75,5 +84,50 @@ public class ProductService {
     public Optional<Products> findProductById(String id){
         Optional<Products> product = productRepository.findById(id);
         return product;
+    }
+
+    public ResultSearch searchProducts(RequestSearch requestSearch){
+        Query query = new Query();
+        if (requestSearch.getProductName() != null && !requestSearch.getProductName().isEmpty()) {
+            query.addCriteria(Criteria.where("productName").regex(requestSearch.getProductName(), "i")); // tìm không phân biệt hoa thường
+        }
+
+        if (requestSearch.getCategory() != null && !requestSearch.getCategory().isEmpty()) {
+            Categrories cate = categroryService.findByCateName(requestSearch.getCategory());
+            if (cate != null) {
+                query.addCriteria(Criteria.where("categrory").is(cate));
+            }
+        }
+
+        if (requestSearch.getRating() > 0) {
+            query.addCriteria(Criteria.where("rating").gte(requestSearch.getRating()));
+        }
+
+        // Sắp xếp theo giá tăng/giảm
+        if (requestSearch.getSortPrice() != null && requestSearch.getSortPrice().equals("asc")) {
+            query.with(Sort.by(Sort.Direction.ASC, "price"));
+        } else if (requestSearch.getSortPrice() != null && requestSearch.getSortPrice().equals("desc")) {
+            query.with(Sort.by(Sort.Direction.DESC, "price"));
+        }
+
+        long totalItems = mongoTemplate.count(query, Products.class);
+        // Phân trang
+        int currentPage = requestSearch.getCurrentPage() > 0 ? requestSearch.getCurrentPage() : 1;
+        int limit = requestSearch.getLimmitItems() > 0 ? requestSearch.getLimmitItems() : 10;
+        int skip = (currentPage - 1) * limit;
+        int totalPages = (int) Math.ceil((double) totalItems / limit);
+
+        Pagination pagination = new Pagination();
+        pagination.setCurrentPage(currentPage);
+        pagination.setLimitItem(limit);
+        pagination.setPageTotal(totalPages);
+
+        query.skip(skip).limit(limit);
+        ResultSearch searchResult =  new ResultSearch();
+        List<Products> products = mongoTemplate.find(query, Products.class);
+        searchResult.setProducts(products);
+        searchResult.setPagination(pagination);
+        
+        return searchResult;
     }
 }

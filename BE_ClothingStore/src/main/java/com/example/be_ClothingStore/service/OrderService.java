@@ -43,6 +43,8 @@ public class OrderService {
         return null;
     }
 
+   
+
     public List<Orders> getOrderByStatus(String status){
         List<Orders> orders = this.orderRepository.findByStatus(status);
         if (orders.size() != 0){
@@ -69,6 +71,17 @@ public class OrderService {
             owner = user.get();
         }
         List<Orders> orders = this.orderRepository.findOrderByUserID(owner);
+        return orders;
+    }
+
+    public List<Orders> findUserOrderByStatus(String userId, String status) {
+        ObjectId userIdObj = new ObjectId(userId);
+        Optional<Users> user = this.userRepository.findById(userIdObj);
+        Users owner = null;
+        if (user.isPresent()){
+            owner = user.get();
+        }
+        List<Orders> orders = this.orderRepository.findByUserIDAndStatus(owner, status);
         return orders;
     }
 }
