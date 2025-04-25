@@ -49,6 +49,5 @@ public class ReviewService {
 
     public List<Reviews> getReviewsOfProduct(String productId){
         return this.reviewRepository.findByProductID(productId);
-    
     }
 }

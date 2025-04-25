@@ -16,4 +16,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface ProductRepository extends MongoRepository<Products, String> {
     Optional<Products> findById(ObjectId id);
     List<Products> findByCategrory(Categrories categrory);
+    List<Products> findByProductName(Categrories categrory);
 }
