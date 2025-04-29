@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.be_ClothingStore.domain.Users;
+import com.example.be_ClothingStore.domain.ForgotPassword.EmailRequest;
+import com.example.be_ClothingStore.domain.ForgotPassword.VerificationCode;
 import com.example.be_ClothingStore.domain.RestResponse.RestResponse;
 import com.example.be_ClothingStore.domain.dto.LoginDTO;
 import com.example.be_ClothingStore.domain.dto.ResponseLoginDTO;
 import com.example.be_ClothingStore.service.UserService;
+import com.example.be_ClothingStore.service.ForgotPassword.ForgotPasswordService;
 import com.example.be_ClothingStore.util.SecurityUtil;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+
 
 
 @RestController
@@ -33,11 +37,13 @@ public class AuthController {
     private final SecurityUtil securityUtil;
     private final UserService userService;
     private final AuthenticationManagerBuilder authenticationMangerBuilder ;
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder,AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil) {
+    private final ForgotPasswordService forgotPasswordService;
+    public AuthController( ForgotPasswordService forgotPasswordService, UserService userService, PasswordEncoder passwordEncoder,AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil) {
         this.authenticationMangerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.forgotPasswordService = forgotPasswordService;
     }
 
     @PostMapping("/login")
@@ -75,11 +81,9 @@ public class AuthController {
         return ResponseEntity.ok(responseBody);
     }
 
+    // Có @Valid trả ra nếu sai kiểu của các trường trong BD yêu cầu
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody Users user) {
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
-        }
+    public ResponseEntity<?> signUp(@Valid @RequestBody Users user) {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
         Users newUser = this.userService.handleCreateUser(user);
@@ -90,6 +94,30 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
+
     
+    @PostMapping("/forgot-password")
+    public Boolean sendCodeAuthen(@RequestBody EmailRequest emailRequest) {
+        if (this.userService.handleGetUserbyEmail(emailRequest.getEmail()) == null) {
+            return false;
+        }
+        this.forgotPasswordService.generateAndSendCode(emailRequest.getEmail());
+        return true;
+    }
+    
+    @PostMapping("/change-password")
+    public ResponseEntity<?> verifyCode(@RequestBody VerificationCode verificationCode) {
+        boolean isValid = this.forgotPasswordService.verifyCode(verificationCode.getEmail(), verificationCode.getCode(), verificationCode.getNewPassword());
+        if (!isValid) {
+            RestResponse<?> res = new RestResponse<>(
+                HttpStatus.BAD_REQUEST.value(),
+                "Code không hợp lệ hoặc đã hết hạn!",
+                "Code không hợp lệ hoặc đã hết hạn!",
+                null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(true);
+    }    
     
 }

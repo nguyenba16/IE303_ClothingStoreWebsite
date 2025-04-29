@@ -18,7 +18,7 @@ public class VnPayService {
         String vnp_Command = "pay";
         String vnp_TxnRef = VnPayConfig.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
-        String vnp_TmnCode = VnPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = VnPayConfig.tmnCode;
         String orderType = "order-type";
         
         Map<String, String> vnp_Params = new HashMap<>();
@@ -35,7 +35,7 @@ public class VnPayService {
         String locate = "vn";
         vnp_Params.put("vnp_Locale", locate);
 
-        urlReturn += VnPayConfig.vnp_Returnurl;
+        urlReturn += VnPayConfig.returnUrl;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -77,9 +77,9 @@ public class VnPayService {
         }
         System.out.println("============adas=============: "+ hashData);
         String queryUrl = query.toString();
-        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.vnp_HashSecret, hashData.toString());
+        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.hashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VnPayConfig.vnp_Url + "?" + queryUrl;
+        String paymentUrl = VnPayConfig.apiUrl + "?" + queryUrl;
         return paymentUrl;
     }
 
