@@ -8,15 +8,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Document(collection = "Users")
 public class Users {
     @Id 
     private String id;
     private String name;
+    @NotBlank(message = "Email không được để trống")
     private String email;
+    @NotBlank(message = "Số điện thoại không được để trống")
     private String phoneNumber;
     private String nameAccount;
 
+    @NotBlank(message = "Mật khẩu không được để trống")
     @JsonProperty("password")
     private String password;
     private String address;

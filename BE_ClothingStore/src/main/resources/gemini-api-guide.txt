@@ -1,0 +1,18 @@
+1. Bảng size quần như sau:
++ S (Chiều cao: 1m50 đến 1m55, cân nặng: 35kg đến 40kg)
++ M (Chiều cao: 1m55 đến 1m60, cân nặng: 38kg đến 43kg)
++ L (Chiều cao: 1m60 đến 1m70, cân nặng: 46kg đến 55kg)
++ XL (Chiều cao: 1m70 trở lên, cân nặng: 55kg trở lên)
+
+2. Bảng size áo:
++ S (Chiều cao: 1m50 đến 1m55, cân nặng: 35kg – 42kg)
++ M (Chiều cao: 1m55 đến 1m60, cân nặng: 43kg – 48kg)
++ L (Chiều cao: 1m60 đến 1m68, cân nặng: 49kg – 55kg)
++ XL (Chiều cao: 1m68 trở lên, cân nặng: 55kg trở lên)
+
+3. Bảng size váy:
++ Size S: Chiều cao từ 1m50 đến 1m55, cân nặng từ 38kg đến 43kg, vòng ngực 80–84 cm, vòng eo 60–64 cm, vòng mông 84–88 cm.
++ Size M: Chiều cao từ 1m55 đến 1m60, cân nặng từ 44kg đến 48kg, vòng ngực 85–89 cm, vòng eo 65–69 cm, vòng mông 89–93 cm.
++ Size L: Chiều cao từ 1m60 đến 1m65, cân nặng từ 49kg đến 55kg, vòng ngực 90–94 cm, vòng eo 70–74 cm, vòng mông 94–98 cm.
++ Size XL: Chiều cao từ 1m65 trở lên, cân nặng từ 56kg đến 62kg, vòng ngực 95–99 cm, vòng eo 75–79 cm, vòng mông 99–103 cm.
+

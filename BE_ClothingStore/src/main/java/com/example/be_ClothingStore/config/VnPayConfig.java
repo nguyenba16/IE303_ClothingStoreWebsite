@@ -1,6 +1,8 @@
 package com.example.be_ClothingStore.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,12 +13,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Component
+@ConfigurationProperties(prefix = "vnpay")
 public class VnPayConfig {
-    public static String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = "/customer/vnpay-payment";
-    public static String vnp_TmnCode ="ZASC1BJ8";
-    public static String vnp_HashSecret ="G91GOSHPX610N5FYGL6M17HEAK0VY5EF"; 
-    public static String vnp_apiUrl="https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    public static String tmnCode;
+    public static String hashSecret;
+    public static String vnpUrl;
+    public static String returnUrl;
+    public static String apiUrl;
 
     public static String md5(String message) {
         String digest = null;
@@ -72,7 +75,7 @@ public class VnPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(hashSecret,sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {

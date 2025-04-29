@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,23 +23,10 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;    
-    private final JwtDecoder jwtDecoder;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
     @Value("${jwt.secret}")
     private String jwtKey;
 
-    public SecurityConfig(
-        CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-        CustomAccessDeniedHandler customAccessDeniedHandler,
-        JwtDecoder jwtDecoder,
-        @Lazy JwtAuthFilter jwtAuthFilter
-    ) {
-        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
-        this.customAccessDeniedHandler = customAccessDeniedHandler;
-        this.jwtDecoder = jwtDecoder;
+    public SecurityConfig(@Lazy JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
@@ -110,7 +96,6 @@ public class SecurityConfig {
          JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
          grantedAuthoritiesConverter.setAuthorityPrefix("");
          grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
- 
          JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
          jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
          return jwtAuthenticationConverter;
