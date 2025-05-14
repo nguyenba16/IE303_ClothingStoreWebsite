@@ -130,4 +130,12 @@ public class ProductService {
         
         return searchResult;
     }
+
+    public List<Products> getOutstandingProduct(){
+        Query query = new Query();
+        query.limit(10);
+        query.with(Sort.by(Sort.Direction.DESC, "rating"));
+        List<Products> products = mongoTemplate.find(query, Products.class);
+        return products;
+    }
 }
