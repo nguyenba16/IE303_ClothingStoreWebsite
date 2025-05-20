@@ -2,6 +2,9 @@ package com.example.be_ClothingStore.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -9,23 +12,32 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document (collection = "Carts")
+import lombok.Data;
+
+@Data
+@Document(collection = "Carts")
 public class Carts {
     @Id
     private String id;
     @DBRef
     private Users userID;
-    private List<Items> cartItems;
+    // Map<productId, Map<size+color, quantity>>
+    private Map<String, Map<String, Integer>> items = new HashMap<>();
 
     @CreatedDate
     private LocalDateTime createAt;
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    public Carts(String id, Users userID, List<Items> cartItems, LocalDateTime createAt, LocalDateTime updateAt) {
+    public Carts() {
+        this.items = new HashMap<>();
+    }
+
+    public Carts(String id, Users userID, Map<String, Map<String, Integer>> items, LocalDateTime createAt,
+            LocalDateTime updateAt) {
         this.id = id;
         this.userID = userID;
-        this.cartItems = cartItems;
+        this.items = items;
         this.createAt = createAt;
         this.updateAt = updateAt;
     }
@@ -46,12 +58,12 @@ public class Carts {
         this.userID = userID;
     }
 
-    public List<Items> getCartItems() {
-        return cartItems;
+    public Map<String, Map<String, Integer>> getItems() {
+        return items;
     }
 
-    public void setCartItems(List<Items> cartItems) {
-        this.cartItems = cartItems;
+    public void setItems(Map<String, Map<String, Integer>> items) {
+        this.items = items;
     }
 
     public LocalDateTime getCreateAt() {
@@ -69,5 +81,40 @@ public class Carts {
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
-    
+
+    public void addItem(String productId, String size, String color, int quantity) {
+        String key = size + "_" + color;
+        items.computeIfAbsent(productId, k -> new HashMap<>())
+                .merge(key, quantity, Integer::sum);
+    }
+
+    public void removeItem(String productId, String size, String color) {
+        String key = size + "_" + color;
+        Map<String, Integer> productItems = items.get(productId);
+        if (productItems != null) {
+            productItems.remove(key);
+            if (productItems.isEmpty()) {
+                items.remove(productId);
+            }
+        }
+    }
+
+    public void updateItemQuantity(String productId, String size, String color, int quantity) {
+        String key = size + "_" + color;
+        Map<String, Integer> productItems = items.get(productId);
+        if (productItems != null) {
+            if (quantity <= 0) {
+                productItems.remove(key);
+                if (productItems.isEmpty()) {
+                    items.remove(productId);
+                }
+            } else {
+                productItems.put(key, quantity);
+            }
+        }
+    }
+
+    public void clear() {
+        items.clear();
+    }
 }

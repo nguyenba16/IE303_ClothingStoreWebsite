@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BeClothingStoreApplication<be_ClothingStore>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.be_ClothingStore.BeClothingStoreApplication",
+            "projectName": "be_ClothingStore",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BeClothingStoreApplication<BE_ClothingStore>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.be_ClothingStore.BeClothingStoreApplication",
+            "projectName": "BE_ClothingStore",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
