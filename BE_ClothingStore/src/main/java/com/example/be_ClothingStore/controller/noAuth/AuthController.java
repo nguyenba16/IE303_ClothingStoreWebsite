@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,8 +83,18 @@ public class AuthController {
     }
 
     // Có @Valid trả ra nếu sai kiểu của các trường trong BD yêu cầu
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody Users user) {
+    @PostMapping("/signup/{verifyCode}")
+    public ResponseEntity<?> signUp(@Valid @RequestBody Users user, @PathVariable("verifyCode") String verifyCode) {
+        boolean isValid = this.forgotPasswordService.verifyCodetoSignUp(user.getEmail(), verifyCode);
+        if (!isValid) {
+            RestResponse<?> res = new RestResponse<>(
+                HttpStatus.BAD_REQUEST.value(),
+                "Code không hợp lệ hoặc đã hết hạn!",
+                "Code không hợp lệ hoặc đã hết hạn!",
+                null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        }
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
         Users newUser = this.userService.handleCreateUser(user);
@@ -96,11 +107,11 @@ public class AuthController {
     }
 
     
-    @PostMapping("/forgot-password")
+    @PostMapping("/send-email-code")
     public Boolean sendCodeAuthen(@RequestBody EmailRequest emailRequest) {
-        if (this.userService.handleGetUserbyEmail(emailRequest.getEmail()) == null) {
-            return false;
-        }
+        // if (this.userService.handleGetUserbyEmail(emailRequest.getEmail()) == null) {
+        //     return false;
+        // }
         this.forgotPasswordService.generateAndSendCode(emailRequest.getEmail());
         return true;
     }

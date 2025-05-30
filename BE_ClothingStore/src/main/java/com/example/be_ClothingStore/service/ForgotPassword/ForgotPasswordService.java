@@ -31,8 +31,8 @@ public class ForgotPasswordService {
 
     @Async
     public void generateAndSendCode(String email) {
-        Optional<Users> user = this.userRepository.findByEmail(email);
-        if (user.isEmpty()) throw new RuntimeException("Email không tồn tại!");
+        // Optional<Users> user = this.userRepository.findByEmail(email);
+        // if (user.isEmpty()) throw new RuntimeException("Email không tồn tại!");
 
         String code = String.valueOf(new Random().nextInt(900000) + 100000); // 6 số
         VerificationCode vcode = new VerificationCode();
@@ -61,6 +61,20 @@ public class ForgotPasswordService {
                 String hashPassword = this.passwordEncoder.encode(newPassword);
                 user.setPassword(hashPassword);
                 this.userRepository.save(user);
+                return true;
+            }
+            return false;
+        }
+        // Không tồn tại email nào
+        return false;
+    }
+
+    public Boolean verifyCodetoSignUp(String email, String code){
+        Optional<VerificationCode> verificationCode = this.verificationCodeRepository.findByEmail(email);
+        if (verificationCode.isPresent()) {
+            VerificationCode verifyCode = verificationCode.get();
+            // Kiểm tra xem có hết hạn hoặc k đúng code không
+            if (verifyCode.getCode().equals(code) && verifyCode.getExpiredAt().isAfter(LocalDateTime.now())){
                 return true;
             }
             return false;
