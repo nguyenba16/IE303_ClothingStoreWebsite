@@ -19,8 +19,7 @@ public class ChatBoxController {
 
     @PostMapping("/chat")
     public ResponseEntity<?> chatWithGemini(@RequestBody PromptRequest request) {
-        String responseMessage = this.chatBoxService.sendMessage( request.getRequestText());
-        System.out.println("sdfsdfsdfsdsd====f=sd=f=s=====" +responseMessage);
+        String responseMessage = this.chatBoxService.sendMessage(request.getSessionId(), request.getRequestText());
         PromptRequest res = new PromptRequest();
         res.setRequestText(request.getRequestText());
         res.setResponseText(responseMessage);

@@ -48,45 +48,106 @@ public class ChatBoxService {
         return ((Map<?, ?>) response.getBody().get("file")).get("uri").toString();
     }
 
-    public String sendMessage(String prompt) {
-    // Tạo nội dung gửi
-    List<Map<String, Object>> contents = List.of(
-        Map.of(
-            "role", "user",
-            "parts", List.of(Map.of("text", prompt))
-        )
-    );
+    public String sendMessage(String sessionId, String prompt) {
+    // Lấy history cho session hoặc khởi tạo mới
+    List<PromptRequest> history = chatHistories.computeIfAbsent(sessionId, k -> new ArrayList<>());
 
+    // Nếu history rỗng (tức là lần đầu), thêm hướng dẫn và dữ liệu sản phẩm
+    if (history.isEmpty()) {
+        StringBuilder guideBuilder = new StringBuilder();
+        InputStream inputDocs = getClass().getClassLoader().getResourceAsStream("gemini-api-guide.txt");
+        if (inputDocs != null) {
+            Scanner guideDocs = new Scanner(inputDocs, StandardCharsets.UTF_8);
+            while (guideDocs.hasNextLine()) {
+                guideBuilder.append(guideDocs.nextLine()).append("\n");
+            }
+            guideDocs.close();
+        } else {
+            guideBuilder.append("Không tìm thấy file hướng dẫn.");
+        }
+        String guideData = guideBuilder.toString();
+
+        // Đọc từ database
+        List<Products> products = productRepository.findAll();
+        List<String> productsData = new ArrayList<>();
+        for (Products p : products) {
+            productsData.add("Tên sản phẩm: " + p.getProductName()
+                + ", mô tả: " + p.getDesc()
+                + ", giá: " + p.getPrice()
+                + ", đánh giá: " + p.getRating()
+                + ", tồn kho: " + p.getStock()
+                + ", màu: " + String.join(", ", p.getColors())
+                + ", size: " + String.join(", ", p.getSizes()));
+        }
+
+        // Tạo "hướng dẫn hệ thống" dưới dạng một PromptRequest giả
+        PromptRequest systemContext = new PromptRequest();
+        systemContext.setSessionId(sessionId);
+        systemContext.setRole("user");
+        systemContext.setRequestText("Bạn là trợ lý cho website bán quần áo nữ. Dưới đây là mô tả hệ thống:\n"
+            + guideData + "\nDanh sách sản phẩm hiện có:\n" );
+        history.add(systemContext);
+    }
+    // + String.join("\n", productsData)
+    // Thêm prompt mới từ người dùng
+    PromptRequest userPrompt = new PromptRequest();
+    userPrompt.setSessionId(sessionId);
+    userPrompt.setRequestText(prompt);
+    userPrompt.setRole("user");
+
+    // Tạo contents từ toàn bộ history (bao gồm context cố định đầu và các câu hỏi trước đó)
+    List<Map<String, Object>> contents = new ArrayList<>();
+    for (PromptRequest msg : history) {
+        String text = msg.getRequestText() != null ? msg.getRequestText() : msg.getResponseText();
+        contents.add(Map.of(
+            "role", msg.getRole(),
+            "parts", List.of(Map.of("text", text))
+        ));
+    }
+
+    // Thêm prompt hiện tại vào cuối
+    contents.add(Map.of(
+        "role", "user",
+        "parts", List.of(Map.of("text", prompt))
+    ));
+
+    // Chuẩn bị request
     Map<String, Object> body = Map.of("contents", contents);
-
-    // Header
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-
     HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-    String GeminiUrl = GeminiAPIUrl + apiKey;
+    System.out.println("sdfsfsfsdf==sf=sd=f======" + request);
+    // Gửi request
+    String GeminiUrl =  GeminiAPIUrl + apiKey;
+    ResponseEntity<Map> response = restTemplate.postForEntity(GeminiUrl, request, Map.class);
+    // ResponseEntity<Map> response = null;
+    // Xử lý response
+    if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+        Object candidatesObj = response.getBody().get("candidates");
+        if (candidatesObj instanceof List<?> candidatesList && !candidatesList.isEmpty()) {
+            Map<?, ?> candidate = (Map<?, ?>) candidatesList.get(0);
+            Map<?, ?> content = (Map<?, ?>) candidate.get("content");
+            List<?> parts = (List<?>) content.get("parts");
+            if (!parts.isEmpty()) {
+                Map<?, ?> part = (Map<?, ?>) parts.get(0);
+                String reply = (String) part.get("text");
 
-    try {
-        ResponseEntity<Map> response = restTemplate.postForEntity(GeminiUrl, request, Map.class);
+                // Lưu lịch sử
+                PromptRequest aiResponse = new PromptRequest();
+                aiResponse.setSessionId(sessionId);
+                aiResponse.setResponseText(reply);
+                aiResponse.setRole("model");
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Object candidatesObj = response.getBody().get("candidates");
-            if (candidatesObj instanceof List<?> candidatesList && !candidatesList.isEmpty()) {
-                Map<?, ?> candidate = (Map<?, ?>) candidatesList.get(0);
-                Map<?, ?> content = (Map<?, ?>) candidate.get("content");
-                List<?> parts = (List<?>) content.get("parts");
-                if (!parts.isEmpty()) {
-                    Map<?, ?> part = (Map<?, ?>) parts.get(0);
-                    return (String) part.get("text");
-                }
+                history.add(userPrompt);
+                history.add(aiResponse);
+
+                return reply;
             }
         }
-        return "Không nhận được phản hồi phù hợp từ AI.";
-    } catch (Exception e) {
-        e.printStackTrace();
-        return "Lỗi trong quá trình gửi yêu cầu đến Gemini API.";
+        return "Không tìm thấy nội dung phù hợp.";
+    } else {
+        return "Xin lỗi, tôi không thể trả lời câu hỏi lúc này.";
     }
 }
-
 
 }

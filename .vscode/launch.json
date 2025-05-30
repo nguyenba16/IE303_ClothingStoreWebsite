@@ -9,6 +9,16 @@
       "projectName": "be_ClothingStore",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-BeClothingStoreApplication<BE_ClothingStore>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.be_ClothingStore.BeClothingStoreApplication",
+      "projectName": "BE_ClothingStore",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
