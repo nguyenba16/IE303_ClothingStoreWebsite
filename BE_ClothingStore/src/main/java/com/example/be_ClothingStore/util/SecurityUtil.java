@@ -52,7 +52,6 @@ public class SecurityUtil {
         if (token == null || token.isEmpty()) {
             return null;
         }
-
         try {
             Jwt decodedJwt = jwtDecoder.decode(token);
             if (decodedJwt == null) {
@@ -63,6 +62,7 @@ public class SecurityUtil {
             return null;
         }
     }
+
     public String createToken(Authentication authentication) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.jwtExpiration, ChronoUnit.SECONDS);

@@ -2,7 +2,6 @@ package com.example.be_ClothingStore.controller.Customer;
 
 import com.example.be_ClothingStore.domain.ChatBox.PromptRequest;
 import com.example.be_ClothingStore.service.ChatBoxService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

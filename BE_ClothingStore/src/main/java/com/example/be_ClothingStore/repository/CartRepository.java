@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import org.bson.types.ObjectId;
 
 import com.example.be_ClothingStore.domain.Carts;
-import com.example.be_ClothingStore.domain.Users;
 
 @Repository
 public interface CartRepository extends MongoRepository<Carts, String> {
