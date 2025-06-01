@@ -23,7 +23,7 @@ public class ChatBoxService {
     private final Map<String, List<PromptRequest>> chatHistories = new HashMap<>();
     private final ProductRepository productRepository;
 
-    private final String GeminiAPIUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=";
+    private final String GeminiAPIUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
 
     @Value("${GEMINI_KEY}")
     private String apiKey;
@@ -85,7 +85,7 @@ public class ChatBoxService {
         systemContext.setSessionId(sessionId);
         systemContext.setRole("user");
         systemContext.setRequestText("Bạn là trợ lý cho website bán quần áo nữ. Dưới đây là mô tả hệ thống:\n"
-            + guideData + "\nDanh sách sản phẩm hiện có:\n" );
+            + guideData + "\nDanh sách sản phẩm hiện có:\n" + String.join("\n", productsData) );
         history.add(systemContext);
     }
     // + String.join("\n", productsData)
