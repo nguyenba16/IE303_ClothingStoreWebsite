@@ -21,10 +21,13 @@ public class ForgotPasswordService {
     private final MailService mailService;
     private final UserService userseService;
     private final PasswordEncoder passwordEncoder;
-    public ForgotPasswordService(PasswordEncoder passwordEncoder, UserService userService ,UserRepository userRepository, VerificationCodeRepository verificationCodeRepository, MailService mailService){
+
+    public ForgotPasswordService(PasswordEncoder passwordEncoder, UserService userService,
+            UserRepository userRepository, VerificationCodeRepository verificationCodeRepository,
+            MailService mailService) {
         this.userRepository = userRepository;
         this.verificationCodeRepository = verificationCodeRepository;
-        this.mailService= mailService;
+        this.mailService = mailService;
         this.userseService = userService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -36,7 +39,7 @@ public class ForgotPasswordService {
 
         String code = String.valueOf(new Random().nextInt(900000) + 100000); // 6 số
         VerificationCode vcode = new VerificationCode();
-        vcode.setCode(code); 
+        vcode.setCode(code);
         vcode.setEmail(email);
         vcode.setExpiredAt(LocalDateTime.now().plusMinutes(10));
 
@@ -51,12 +54,12 @@ public class ForgotPasswordService {
         mailService.sendVerificationCode(email, code);
     }
 
-    public Boolean verifyCode(String email, String code, String newPassword){
+    public Boolean verifyCode(String email, String code, String newPassword) {
         Optional<VerificationCode> verificationCode = this.verificationCodeRepository.findByEmail(email);
         if (verificationCode.isPresent()) {
             VerificationCode verifyCode = verificationCode.get();
             // Kiểm tra xem có hết hạn hoặc k đúng code không
-            if (verifyCode.getCode().equals(code) && verifyCode.getExpiredAt().isAfter(LocalDateTime.now())){
+            if (verifyCode.getCode().equals(code) && verifyCode.getExpiredAt().isAfter(LocalDateTime.now())) {
                 Users user = this.userseService.handleGetUserbyEmail(email);
                 String hashPassword = this.passwordEncoder.encode(newPassword);
                 user.setPassword(hashPassword);
@@ -69,12 +72,12 @@ public class ForgotPasswordService {
         return false;
     }
 
-    public Boolean verifyCodetoSignUp(String email, String code){
+    public Boolean verifyCodetoSignUp(String email, String code) {
         Optional<VerificationCode> verificationCode = this.verificationCodeRepository.findByEmail(email);
         if (verificationCode.isPresent()) {
             VerificationCode verifyCode = verificationCode.get();
             // Kiểm tra xem có hết hạn hoặc k đúng code không
-            if (verifyCode.getCode().equals(code) && verifyCode.getExpiredAt().isAfter(LocalDateTime.now())){
+            if (verifyCode.getCode().equals(code) && verifyCode.getExpiredAt().isAfter(LocalDateTime.now())) {
                 return true;
             }
             return false;

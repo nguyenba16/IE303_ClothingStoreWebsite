@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elégante - Mã code xác thực</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding: 20px 0;
+        background: linear-gradient(135deg, #a3804d, #c49b5f);
+        border-radius: 8px 8px 0 0;
+        margin: -20px -20px 20px -20px;
+      }
+      .logo {
+        width: 200px;
+        height: 50px;
+        margin-bottom: 10px;
+      }
+      .content {
+        padding: 20px;
+        color: #333;
+      }
+      .verification-code {
+        background: #f8f9fa;
+        border: 2px dashed #a3804d;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #a3804d;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-size: 12px;
+        border-top: 1px solid #eee;
+        margin-top: 20px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #a3804d;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 20px 0;
+      }
+      .note {
+        font-size: 14px;
+        color: #666;
+        margin-top: 20px;
+      }
+      h2 {
+        color: #a3804d;
+      }
+      .footer p:first-child {
+        color: #a3804d;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <!-- <img src="cid:logo" alt="Elegante Logo" class="logo" /> -->
+        <h1 style="color: white; margin: 0">Gửi mã code</h1>
+      </div>
+      <div class="content">
+        <h2>Xin chào!</h2>
+        <p>
+          Cảm ơn bạn đã sử dụng dịch vụ của Elégante. Để hoàn tất quá trình xác
+          thực, vui lòng sử dụng mã xác thực dưới đây:
+        </p>
+
+        <div class="verification-code">{verificationCode}</div>
+
+        <p class="note">
+          Mã xác thực này có hiệu lực trong 10 phút. Vui lòng không chia sẻ mã
+          này với bất kỳ ai.
+        </p>
+
+        <p>Nếu bạn không yêu cầu mã xác thực này, vui lòng bỏ qua email này.</p>
+      </div>
+      <div class="footer">
+        <p>© 2025 Elégante. All rights reserved.</p>
+        <p>Địa chỉ: 123 Đường Linh Trung, TP.Thủ Đức, TP.HCM</p>
+        <p>Email: support@elegante.com | Hotline: 1900-1234</p>
+      </div>
+    </div>
+  </body>
+</html>
