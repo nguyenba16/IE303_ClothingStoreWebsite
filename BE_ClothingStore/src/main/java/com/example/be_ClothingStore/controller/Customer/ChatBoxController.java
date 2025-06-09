@@ -2,6 +2,10 @@ package com.example.be_ClothingStore.controller.Customer;
 
 import com.example.be_ClothingStore.domain.ChatBox.PromptRequest;
 import com.example.be_ClothingStore.service.ChatBoxService;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +23,19 @@ public class ChatBoxController {
 
     @PostMapping("/chat")
     public ResponseEntity<?> chatWithGemini(@RequestBody PromptRequest request) {
-        String responseMessage = this.chatBoxService.sendMessage(request.getSessionId(), request.getRequestText());
+        String raw = this.chatBoxService.sendMessage(request.getSessionId(), request.getRequestText());
+        String cleanedHtml = raw
+            .replaceAll("(?s)```html\\s*", "")
+            .replaceAll("```\\s*$", "")
+            .trim();
+
+        // Trả về cho frontend
+        Map<String, String> response = new HashMap<>();
+        response.put("html", cleanedHtml);
+
         PromptRequest res = new PromptRequest();
         res.setRequestText(request.getRequestText());
-        res.setResponseText(responseMessage);
+        res.setResponseText(cleanedHtml);
         res.setRole(request.getRole());
         res.setSessionId(request.getSessionId());
         return ResponseEntity.ok().body(res);

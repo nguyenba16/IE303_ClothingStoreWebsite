@@ -1,6 +1,5 @@
 package com.example.be_ClothingStore.service;
 
-import com.example.be_ClothingStore.domain.TryOn.TryOnRequest;
 import com.example.be_ClothingStore.domain.TryOn.TryOnResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -8,12 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class TryOnService {
