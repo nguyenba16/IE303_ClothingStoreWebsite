@@ -2,7 +2,6 @@ package com.example.be_ClothingStore.config;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -22,8 +21,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtDecoder jwtDecoder;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
-
-    @Autowired
+    
     public JwtAuthFilter(JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter) {
         this.jwtDecoder = jwtDecoder;
         this.jwtAuthenticationConverter = jwtAuthenticationConverter;

@@ -2,8 +2,6 @@ package com.example.be_ClothingStore.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.core.Authentication;
@@ -30,7 +28,6 @@ public class SecurityUtil {
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
 
-    @Autowired
     public SecurityUtil(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
         this.jwtDecoder = jwtDecoder;

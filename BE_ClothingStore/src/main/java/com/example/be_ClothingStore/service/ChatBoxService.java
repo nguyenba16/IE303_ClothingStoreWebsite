@@ -49,6 +49,8 @@ public class ChatBoxService {
     }
 
     public String sendMessage(String sessionId, String prompt) {
+    String enhancedPrompt = "Hãy phản hồi dưới dạng mã HTML. Chỉ trả về HTML, không giải thích gì về html đó. chỉ phân tích một đoạn ngắn thôi\n" + prompt;
+
     // Lấy history cho session hoặc khởi tạo mới
     List<PromptRequest> history = chatHistories.computeIfAbsent(sessionId, k -> new ArrayList<>());
 
@@ -70,29 +72,44 @@ public class ChatBoxService {
         // Đọc từ database
         List<Products> products = productRepository.findAll();
         List<String> productsData = new ArrayList<>();
-        for (Products p : products) {
-            productsData.add("Tên sản phẩm: " + p.getProductName()
-                + ", mô tả: " + p.getDesc()
-                + ", giá: " + p.getPrice()
-                + ", đánh giá: " + p.getRating()
-                + ", tồn kho: " + p.getStock()
-                + ", màu: " + String.join(", ", p.getColors())
-                + ", size: " + String.join(", ", p.getSizes()));
-        }
+        // for (Products p : products) {
+        //     productsData.add("Tên sản phẩm: " + p.getProductName()
+        //         + ", mô tả: " + p.getDesc()
+        //         + ", giá: " + p.getPrice()
+        //         + ", đánh giá: " + p.getRating()
+        //         + ", id sản phẩm" + p.getId()
+        //         + ", url ảnh" + p.getProductImage()[0].getUrl()
+        //         + ", tồn kho: " + p.getStock()
+        //         + ", màu: " + String.join(", ", p.getColors())
+        //         + ", size: " + String.join(", ", p.getSizes()));
+        // }
+for (Products p : products) {
+    String htmlCard = "<div class='flex max-w-[95%] justify-between bg-white rounded-lg items-center mt-3 p-1 gap-1'>"
+        + "<img src='" + p.getProductImage()[0].getUrl() + "' alt='' class='w-16' />"
+        + "<div class='w-[60%]'>"
+        + "<p class='line-clamp-1 text-[12px]'>" + p.getProductName() + "</p>"
+        + "<p class='text-[12px]'><strong>Giá: </strong>" + p.getPrice() + " vnđ</p>"
+        + "</div>"
+        + "<button onclick=\"navigateTo('/product/" + p.getId() + "')\" "
+        + "class='bg-black text-white text-[12px] p-2 rounded-full min-w-[15%]'>Mua</button>"
+        + "</div>";
 
+    productsData.add(htmlCard);
+}
         // Tạo "hướng dẫn hệ thống" dưới dạng một PromptRequest giả
         PromptRequest systemContext = new PromptRequest();
         systemContext.setSessionId(sessionId);
         systemContext.setRole("user");
-        systemContext.setRequestText("Bạn là trợ lý cho website bán quần áo nữ. Dưới đây là mô tả hệ thống:\n"
-            + guideData + "\nDanh sách sản phẩm hiện có:\n" + String.join("\n", productsData) );
+        systemContext.setRequestText("Bạn là trợ lý AI cho một website bán quần áo nữ. Hướng dẫn hệ thống:\n"
+        + guideData + "\n\nDanh sách sản phẩm (HTML):\n" + String.join("\n", productsData));
+
         history.add(systemContext);
     }
     // + String.join("\n", productsData)
     // Thêm prompt mới từ người dùng
     PromptRequest userPrompt = new PromptRequest();
     userPrompt.setSessionId(sessionId);
-    userPrompt.setRequestText(prompt);
+    userPrompt.setRequestText(enhancedPrompt);
     userPrompt.setRole("user");
 
     // Tạo contents từ toàn bộ history (bao gồm context cố định đầu và các câu hỏi trước đó)
@@ -116,7 +133,6 @@ public class ChatBoxService {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-    System.out.println("sdfsfsfsdf==sf=sd=f======" + request);
     // Gửi request
     String GeminiUrl =  GeminiAPIUrl + apiKey;
     ResponseEntity<Map> response = restTemplate.postForEntity(GeminiUrl, request, Map.class);
@@ -131,7 +147,6 @@ public class ChatBoxService {
             if (!parts.isEmpty()) {
                 Map<?, ?> part = (Map<?, ?>) parts.get(0);
                 String reply = (String) part.get("text");
-
                 // Lưu lịch sử
                 PromptRequest aiResponse = new PromptRequest();
                 aiResponse.setSessionId(sessionId);
@@ -140,7 +155,7 @@ public class ChatBoxService {
 
                 history.add(userPrompt);
                 history.add(aiResponse);
-
+System.out.println( "dasdasd=sd=f==s=df=======sf=sd=f====="+reply);
                 return reply;
             }
         }
